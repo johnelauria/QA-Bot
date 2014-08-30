@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.cambridge.qabot.config.Config;
 import org.cambridge.qabot.config.Data;
@@ -83,6 +85,7 @@ public class Main extends JFrame implements ActionListener {
 		countryList = new JList<String>(countryListData());
 		JScrollPane scrollpane = new JScrollPane(countryList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		countryList.addListSelectionListener(countryListSelectionListener);
 		
 		selectNewCountry = new JComboBox<String>(countryList());
 		
@@ -90,6 +93,7 @@ public class Main extends JFrame implements ActionListener {
 		btnAddCountry.addActionListener(this);
 		
 		btnRemoveCountry = new JButton("-");
+		btnRemoveCountry.setEnabled(false);
 		btnRemoveCountry.addActionListener(this);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -181,6 +185,26 @@ public class Main extends JFrame implements ActionListener {
 		}
 		return countryListModel;
 	}
+	
+	/**
+	 * Removes a specific country from the country list to be tested
+	 * @param int countryListIndex
+	 */
+	private void removeCountryFromList(int countryListIndex) {
+		countryListModel.removeElementAt(countryListIndex);
+	}
+	
+	/**
+	 * If the tester clicks on one of the countries in the countryList JList
+	 */
+	private ListSelectionListener countryListSelectionListener = new ListSelectionListener() {
+		
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			btnRemoveCountry.setEnabled(true);
+			
+		}
+	};
 
 	@Override
 	public void actionPerformed(ActionEvent btn) {
@@ -197,13 +221,14 @@ public class Main extends JFrame implements ActionListener {
 				showMessageDialog(null, e.getMessage(), "Error occured!", ERROR_MESSAGE);
 			}
 		}
-		// When clicking the add country button to the countries to test list
+		// When clicking the "+" country button to the countries to test list
 		if (btn.getSource().equals(btnAddCountry)) {
 			countryListModel.addElement(selectNewCountry.getSelectedItem().toString());
 		}
-		
+		// When clicking the "-" button, delete the selected list in the JList
 		if (btn.getSource().equals(btnRemoveCountry)) {
-			//TODO: Implement method to remove a country from the list after clicking the "-" button
+			removeCountryFromList(countryList.getSelectedIndex());
+			btnRemoveCountry.setEnabled(false);
 		}
 	}
 }
