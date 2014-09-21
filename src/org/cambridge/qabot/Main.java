@@ -32,6 +32,8 @@ import org.cambridge.qabot.config.Config;
 import org.cambridge.qabot.config.Data;
 import org.cambridge.qabot.test.ChangeCountry;
 import org.cambridge.qabot.test.Purchase;
+import java.awt.Color;
+import java.awt.Toolkit;
 
 public class Main extends JFrame implements ActionListener, KeyListener {
 	
@@ -67,40 +69,60 @@ public class Main extends JFrame implements ActionListener, KeyListener {
 	 * Create the frame.
 	 */
 	public Main() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/org/cambridge/qabot/assets/Cambdrige Icon.jpg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 490, 336);
 		setTitle("QA Bot");
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setName("QA Bot");
 		setContentPane(contentPane);
 		
 		lblTestAgenda = new JLabel("Task");
+		lblTestAgenda.setForeground(Color.LIGHT_GRAY);
 		
 		lblServer = new JLabel("Server");
+		lblServer.setForeground(Color.LIGHT_GRAY);
 		
 		comboBox = new JComboBox<String>(this.servers());
+		comboBox.setForeground(Color.LIGHT_GRAY);
+		comboBox.setBackground(Color.DARK_GRAY);
 		
 		btnStart = new JButton("Start");
+		btnStart.setForeground(Color.RED);
+		btnStart.setBackground(Color.DARK_GRAY);
 		btnStart.addActionListener(this);
 		
 		lblCountriesToTest = new JLabel("Countries to test");
+		lblCountriesToTest.setForeground(Color.LIGHT_GRAY);
 
 		countryList = new JList<String>(countryListData());
+		countryList.setBackground(Color.DARK_GRAY);
+		countryList.setForeground(Color.LIGHT_GRAY);
 		JScrollPane scrollpane = new JScrollPane(countryList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		countryList.addListSelectionListener(countryListSelectionListener);
 		
 		selectNewCountry = new JComboBox<String>(countryList());
+		selectNewCountry.setForeground(Color.LIGHT_GRAY);
+		selectNewCountry.setBackground(Color.DARK_GRAY);
+		selectNewCountry.setToolTipText("Hit enter to quickly add to list");
 		selectNewCountry.addKeyListener(this);
 		btnAddCountry = new JButton("+");
+		btnAddCountry.setForeground(Color.LIGHT_GRAY);
+		btnAddCountry.setBackground(Color.DARK_GRAY);
 		btnAddCountry.addActionListener(this);
 		
 		btnRemoveCountry = new JButton("-");
+		btnRemoveCountry.setForeground(Color.LIGHT_GRAY);
+		btnRemoveCountry.setBackground(Color.DARK_GRAY);
 		btnRemoveCountry.setEnabled(false);
 		btnRemoveCountry.addActionListener(this);
 		
 		testType = new JComboBox<String>(testTypeList);
+		testType.setForeground(Color.LIGHT_GRAY);
+		testType.setBackground(Color.DARK_GRAY);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
