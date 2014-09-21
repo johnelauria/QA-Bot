@@ -8,6 +8,8 @@ import static org.cambridge.qabot.config.Data.countryList;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -28,9 +30,10 @@ import javax.swing.event.ListSelectionListener;
 
 import org.cambridge.qabot.config.Config;
 import org.cambridge.qabot.config.Data;
+import org.cambridge.qabot.test.ChangeCountry;
 import org.cambridge.qabot.test.Purchase;
 
-public class Main extends JFrame implements ActionListener {
+public class Main extends JFrame implements ActionListener, KeyListener {
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -44,6 +47,8 @@ public class Main extends JFrame implements ActionListener {
 	private JList<String> countryList;
 	private JLabel lblCountriesToTest;
 	private DefaultListModel<String> countryListModel;
+	private static final String testTypeList[] = {"Purchase", "Change Country"};
+	private JComboBox<String> testType;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -74,8 +79,6 @@ public class Main extends JFrame implements ActionListener {
 		
 		lblServer = new JLabel("Server");
 		
-		JLabel lblServerToTest = new JLabel("Change Country");
-		
 		comboBox = new JComboBox<String>(this.servers());
 		
 		btnStart = new JButton("Start");
@@ -89,61 +92,55 @@ public class Main extends JFrame implements ActionListener {
 		countryList.addListSelectionListener(countryListSelectionListener);
 		
 		selectNewCountry = new JComboBox<String>(countryList());
-		
+		selectNewCountry.addKeyListener(this);
 		btnAddCountry = new JButton("+");
 		btnAddCountry.addActionListener(this);
 		
 		btnRemoveCountry = new JButton("-");
 		btnRemoveCountry.setEnabled(false);
 		btnRemoveCountry.addActionListener(this);
+		
+		testType = new JComboBox<String>(testTypeList);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblServerToTest)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(43)
-									.addComponent(lblTestAgenda)))
-							.addGap(55)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblServer)
-									.addGap(155))
-								.addComponent(comboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addGap(18)
-							.addComponent(btnStart))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblCountriesToTest, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(btnRemoveCountry)
 									.addPreferredGap(ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
 									.addComponent(btnAddCountry))
-								.addComponent(selectNewCountry, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 299, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addComponent(selectNewCountry, 0, 133, Short.MAX_VALUE)
+								.addComponent(testType, 0, 133, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(47)
+							.addComponent(lblTestAgenda)
+							.addGap(77)))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblServer)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)
+								.addGap(18)
+								.addComponent(btnStart))
+							.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+								.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 299, GroupLayout.PREFERRED_SIZE)
+								.addGap(8))))
+					.addGap(22))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+					.addGap(42)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblServer)
-						.addComponent(lblTestAgenda))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(5)
-							.addComponent(lblServerToTest))
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnStart)))
+						.addComponent(lblTestAgenda)
+						.addComponent(lblServer))
+					.addGap(12)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(98)
@@ -155,8 +152,13 @@ public class Main extends JFrame implements ActionListener {
 								.addComponent(btnRemoveCountry)
 								.addComponent(btnAddCountry)))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(97)
-							.addComponent(scrollpane, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)))
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnStart)
+								.addComponent(testType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(55)
+							.addComponent(scrollpane, GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)))
 					.addGap(115))
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -208,28 +210,59 @@ public class Main extends JFrame implements ActionListener {
 	};
 
 	@Override
-	public void actionPerformed(ActionEvent btn) {
+	public void actionPerformed(ActionEvent e) {
 		// When user clicked on Country Change Start button
-		if (btn.getSource().equals(btnStart)) {
+		if (e.getSource().equals(btnStart)) {
 			try {
-				Purchase changeCountry = new Purchase(comboBox.getSelectedItem().toString(), countryListModel);
-				int errors = changeCountry.start();
+				int errors = 0;
+				switch (testType.getSelectedItem().toString()) {
+				case "Purchase":
+					Purchase purchase = new Purchase(comboBox.getSelectedItem().toString(), countryListModel);
+					errors = purchase.start();
+					break;
+				case "Change Country":
+					ChangeCountry changeCountry = new ChangeCountry(comboBox.getSelectedItem().toString(), countryListModel);
+					errors = changeCountry.start();
+					break;
+				}
 				if (errors > 0)
 					showMessageDialog(null, errors + " Errors found during testing!", "Error found!", ERROR_MESSAGE);
 				else
 					showMessageDialog(null, "Automated testing has completed without errors", "Completed", INFORMATION_MESSAGE);
-			} catch (Exception e) {
-				showMessageDialog(null, e.getMessage(), "Error occured!", ERROR_MESSAGE);
+			} catch (Exception ex) {
+				showMessageDialog(null, ex.getMessage(), "Error occured!", ERROR_MESSAGE);
 			}
 		}
 		// When clicking the "+" country button to the countries to test list
-		if (btn.getSource().equals(btnAddCountry)) {
+		if (e.getSource().equals(btnAddCountry)) {
 			countryListModel.addElement(selectNewCountry.getSelectedItem().toString());
 		}
 		// When clicking the "-" button, delete the selected list in the JList
-		if (btn.getSource().equals(btnRemoveCountry)) {
+		if (e.getSource().equals(btnRemoveCountry)) {
 			removeCountryFromList(countryList.getSelectedIndex());
 			btnRemoveCountry.setEnabled(false);
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_ENTER:
+			if (selectNewCountry.isFocusOwner())
+				countryListModel.addElement(selectNewCountry.getSelectedItem().toString());
+			break;
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
