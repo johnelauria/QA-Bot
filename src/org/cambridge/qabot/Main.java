@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.cambridge.qabot.config.Config;
 import org.cambridge.qabot.config.Data;
+import org.cambridge.qabot.test.Purchase;
 
 public class Main extends JFrame implements ActionListener {
 	
@@ -211,7 +212,7 @@ public class Main extends JFrame implements ActionListener {
 		// When user clicked on Country Change Start button
 		if (btn.getSource().equals(btnStart)) {
 			try {
-				ChangeCountry changeCountry = new ChangeCountry(comboBox.getSelectedItem().toString(), countryListModel);
+				Purchase changeCountry = new Purchase(comboBox.getSelectedItem().toString(), countryListModel);
 				int errors = changeCountry.start();
 				if (errors > 0)
 					showMessageDialog(null, errors + " Errors found during testing!", "Error found!", ERROR_MESSAGE);
